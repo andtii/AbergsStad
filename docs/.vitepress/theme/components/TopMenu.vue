@@ -13,19 +13,25 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 
 const isHidden = ref(false);
-let lastScrollY = window.scrollY;
+let lastScrollY = 0;
 
 function onScroll() {
+  if (typeof window === 'undefined') return;
   const currentY = window.scrollY;
   isHidden.value = currentY > lastScrollY && currentY > 80;
   lastScrollY = currentY;
 }
 
 onMounted(() => {
-  window.addEventListener('scroll', onScroll);
+  if (typeof window !== 'undefined') {
+    lastScrollY = window.scrollY;
+    window.addEventListener('scroll', onScroll);
+  }
 });
 onUnmounted(() => {
-  window.removeEventListener('scroll', onScroll);
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('scroll', onScroll);
+  }
 });
 </script>
 
